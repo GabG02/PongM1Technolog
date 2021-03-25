@@ -28,7 +28,15 @@ var game = {
                 this.directionX = -this.directionX;
             if ( this.posY > game.groundHeight || this.posY < 0  )
                 this.directionY = -this.directionY;
-        }
+        },
+        collide : function(anotherItem) {
+            if ( !( this.posX >= anotherItem.posX + anotherItem.width || this.posX <= anotherItem.posX
+                || this.posY >= anotherItem.posY + anotherItem.height || this.posY <= anotherItem.posY ) ) {
+                // Collision
+                return true;
+            }
+            return false;
+        },
     },
     playerOne : {
         width : 10,
@@ -61,7 +69,7 @@ var game = {
         console.log("Création joueur et balle")
         this.playersBallLayer = game.display.createLayer("joueursetballe", this.groundWidth, this.groundHeight, undefined, 2, undefined, 0, 0);
         game.display.drawTextInLayer(this.playersBallLayer, "JOUEURSETBALLE", "10px Arial", "#FF0000", 100, 100);
-
+        game.initMouse(game.control.onMouseMove);
         console.log("Affichage du score")
         this.displayScore(0,0);
         console.log("Affichage de la balle")
@@ -101,9 +109,28 @@ var game = {
     },
 
     movePlayers : function() {
-        if (game.playerOne.goUp && game.playerOne.posY > 0)
-            game.playerOne.posY-=5;
-        else if (game.playerOne.goDown && game.playerOne.posY < game.groundHeight - game.playerOne.height)
-            game.playerOne.posY+=5;
+        if ( game.control.controlSystem == "KEYBOARD" ) {
+            // keyboard control
+            if ( game.playerOne.goUp ) {
+                game.playerOne.posY-=5;
+            } else if ( game.playerOne.goDown ) {
+                game.playerOne.posY+=5;
+            }
+        } else if ( game.control.controlSystem == "MOUSE" ) {
+            // mouse control
+            if (game.playerOne.goUp && game.playerOne.posY > game.control.mousePointer)
+                game.playerOne.posY-=5;
+            else if (game.playerOne.goDown && game.playerOne.posY < game.control.mousePointer)
+                game.playerOne.posY+=5;
+        }
     },
+    collideBallWithPlayersAndAction : function() {
+        if ( this.ball.collide(game.playerOne) )
+            game.ball.directionX = -game.ball.directionX;
+        if ( this.ball.collide(game.playerTwo) )
+            game.ball.directionX = -game.ball.directionX;
+    },
+    initMouse : function(onMouseMoveFunction) {
+        window.onmousemove = onMouseMoveFunction;
+    }
 };
