@@ -6,20 +6,49 @@
     <meta name="author" content="Gabriel GUISSET"/>
     <title>Pong</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" media="screen" type="text/css" href="css/app.css"/>
 
     <link rel="shortcut icon" href="./media/img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="./media/img/favicon.ico" type="image/x-icon">
 
+    <!--
     <script src="https://kit.fontawesome.com/1360533f3a.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+-->
+
 </head>
 <body>
 
 <div id="game">
+    <script src="./js/game.js"></script>
+    <script src="./js/game.display.js"></script>
+    <script src="./js/game.control.js"></script>
+    <script src="./js/game.keycode.js"></script>
+    <script>
+        (function () {
+            // début du code isolé
+            var requestAnimId;
 
+            var initialisation = function() {
+                // le code de l'initialisation
+                game.init();
+                requestAnimId = window.requestAnimationFrame(main); // premier appel de main au rafraîchissement de la page
+            }
+
+            var main = function() {
+                game.clearLayer(game.playersBallLayer);
+                game.movePlayers();
+                game.displayPlayers();
+                game.moveBall();
+                requestAnimId = window.requestAnimationFrame(main); // rappel de main au prochain rafraîchissement de la page
+            }
+
+            window.onload = initialisation; // appel de la fonction initialisation au chargement de la page
+
+            // fin du code isolé
+        })();
+    </script>
 
 </div>
 </body>
