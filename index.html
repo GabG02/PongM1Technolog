@@ -25,6 +25,7 @@
     <script src="./js/game.display.js"></script>
     <script src="./js/game.control.js"></script>
     <script src="./js/game.keycode.js"></script>
+    <script src="./js/game.ai.js"></script>
     <script>
         (function () {
             // début du code isolé
@@ -33,7 +34,9 @@
             var initialisation = function() {
                 // le code de l'initialisation
                 game.init();
-                requestAnimId = window.requestAnimationFrame(main); // premier appel de main au rafraîchissement de la page
+                if(!game.finished) {
+                    requestAnimId = window.requestAnimationFrame(main); // premier appel de main au rafraîchissement de la page
+                }
             }
 
             var main = function() {
@@ -41,6 +44,7 @@
                 game.movePlayers();
                 game.displayPlayers();
                 game.moveBall();
+                game.ai.move();
                 game.collideBallWithPlayersAndAction();
                 requestAnimId = window.requestAnimationFrame(main); // rappel de main au prochain rafraîchissement de la page
             }

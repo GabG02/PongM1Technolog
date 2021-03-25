@@ -1,14 +1,19 @@
 var game = {
     groundWidth : 700,
     groundHeight : 400,
-    groundColor: "#000000",
     netWidth : 6,
+    groundColor : "#000000",
     netColor : "#FFFFFF",
-
+    finished:false,
     groundLayer : null,
+    scoreLayer : null,
+    playersBallLayer : null,
 
     scorePosPlayer1 : 300,
     scorePosPlayer2 : 365,
+
+    wallSound : null,
+    playerSound : null,
 
     ball : {
         width : 10,
@@ -23,19 +28,19 @@ var game = {
             this.posX += this.directionX * this.speed;
             this.posY += this.directionY * this.speed;
         },
-        bounce : function() {
-            if ( this.posX > game.groundWidth || this.posX < 0 )
+        bounce : function(soundToPlay) {
+            if ( this.posX > game.groundWidth || this.posX < 0 ) {
                 this.directionX = -this.directionX;
-            if ( this.posY > game.groundHeight || this.posY < 0  )
+                soundToPlay.play();
+            }
+            if ( this.posY > game.groundHeight || this.posY < 0  ) {
                 this.directionY = -this.directionY;
+                soundToPlay.play();
+            }
         },
         collide : function(anotherItem) {
-            if ( !( this.posX >= anotherItem.posX + anotherItem.width || this.posX <= anotherItem.posX
-                || this.posY >= anotherItem.posY + anotherItem.height || this.posY <= anotherItem.posY ) ) {
-                // Collision
-                return true;
-            }
-            return false;
+            return !(this.posX >= anotherItem.posX + anotherItem.width || this.posX <= anotherItem.posX - this.width
+                || this.posY >= anotherItem.posY + anotherItem.height || this.posY <= anotherItem.posY - this.height);
         },
     },
     playerOne : {
@@ -44,8 +49,10 @@ var game = {
         color : "#FFFFFF",
         posX : 30,
         posY : 200,
+        score : 0,
         goUp : false,
-        goDown : false
+        goDown : false,
+        originalPosition : "left"
     },
 
     playerTwo : {
@@ -54,8 +61,10 @@ var game = {
         color : "#FFFFFF",
         posX : 650,
         posY : 200,
+        score : 0,
         goUp : false,
-        goDown : false
+        goDown : false,
+        originalPosition : "right"
     },
     init : function() {
         console.log("Création du terrain")
@@ -71,23 +80,27 @@ var game = {
         game.display.drawTextInLayer(this.playersBallLayer, "JOUEURSETBALLE", "10px Arial", "#FF0000", 100, 100);
         game.initMouse(game.control.onMouseMove);
         console.log("Affichage du score")
-        this.displayScore(0,0);
+        this.displayScore();
         console.log("Affichage de la balle")
         this.displayBall();
         console.log("Création des joueurs")
         this.displayPlayers();
 
         this.initKeyboard(game.control.onKeyDown, game.control.onKeyUp);
-
+        this.initMouse(game.control.onMouseMove);
+        this.playerSound= new Audio("./media/sounds/playerbounce.mp3");
+        this.wallSound = new Audio("./media/sounds/wallbounce.mp3");
+        game.ai.setPlayerAndBall(this.playerTwo, this.ball);
     },
     moveBall : function() {
         this.ball.move();
-        this.ball.bounce();
+        this.ball.bounce(this.wallSound);
         this.displayBall();
     },
-    displayScore : function(scorePlayer1, scorePlayer2) {
-        game.display.drawTextInLayer(this.scoreLayer, scorePlayer1, "60px Arial", "#FFFFFF", this.scorePosPlayer1, 55);
-        game.display.drawTextInLayer(this.scoreLayer, scorePlayer2, "60px Arial", "#FFFFFF", this.scorePosPlayer2, 55);
+    displayScore : function() {
+        this.scoreLayer.hidden=true;
+        game.display.drawTextInLayer(this.scoreLayer, this.playerOne.score, "60px Arial", "#FFFFFF", this.scorePosPlayer1, 55);
+        game.display.drawTextInLayer(this.scoreLayer, this.playerTwo.score, "60px Arial", "#FFFFFF", this.scorePosPlayer2, 55);
     },
 
     displayBall : function() {
@@ -109,14 +122,14 @@ var game = {
     },
 
     movePlayers : function() {
-        if ( game.control.controlSystem == "KEYBOARD" ) {
+        if ( game.control.controlSystem === "KEYBOARD" ) {
             // keyboard control
             if ( game.playerOne.goUp ) {
                 game.playerOne.posY-=5;
             } else if ( game.playerOne.goDown ) {
                 game.playerOne.posY+=5;
             }
-        } else if ( game.control.controlSystem == "MOUSE" ) {
+        } else if ( game.control.controlSystem === "MOUSE" ) {
             // mouse control
             if (game.playerOne.goUp && game.playerOne.posY > game.control.mousePointer)
                 game.playerOne.posY-=5;
@@ -125,12 +138,33 @@ var game = {
         }
     },
     collideBallWithPlayersAndAction : function() {
-        if ( this.ball.collide(game.playerOne) )
+        if(this.ball.posX<=0) {
+            this.ball.speed = 0;
+            this.playerTwo.score+=1;
+            this.end();
+        } else if(this.ball.posY>=game.groundWidth){
+            this.ball.speed = 0;
+            this.playerOne.score+=1;
+            this.end();
+        }
+        if ( this.ball.collide(game.playerOne) ) {
+            this.ball.speed+=0.1;
             game.ball.directionX = -game.ball.directionX;
-        if ( this.ball.collide(game.playerTwo) )
+            this.playerSound.play();
+        }
+        if ( this.ball.collide(game.playerTwo) ) {
+            this.ball.speed+=0.1;
             game.ball.directionX = -game.ball.directionX;
+            this.playerSound.play();
+        }
     },
     initMouse : function(onMouseMoveFunction) {
         window.onmousemove = onMouseMoveFunction;
+    },
+    end: function(){
+        console.log("Fin de la partie");
+        this.end=true;
+        this.ball.speed=0
+        this.displayScore();
     }
 };
