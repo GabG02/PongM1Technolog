@@ -98,7 +98,6 @@ var game = {
         this.displayBall();
     },
     displayScore : function() {
-        this.scoreLayer.hidden=true;
         game.display.drawTextInLayer(this.scoreLayer, this.playerOne.score, "60px Arial", "#FFFFFF", this.scorePosPlayer1, 55);
         game.display.drawTextInLayer(this.scoreLayer, this.playerTwo.score, "60px Arial", "#FFFFFF", this.scorePosPlayer2, 55);
     },

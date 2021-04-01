@@ -9,10 +9,10 @@ game.ai = {
     followBall : function() {
         if ( this.ball.posY < this.player.posY + this.player.height/2 ) {
             // la position de la balle est sur l'écran, au dessus de celle de la raquette
-            this.player.posY--;
+            this.player.posY-= game.ball.speed;
         } else if ( this.ball.posY > this.player.posY + this.player.height/2 ) {
             // la position de la balle est sur l'écran, en dessous de celle de la raquette
-            this.player.posY++;
+            this.player.posY+= game.ball.speed;
         }
     },
 
