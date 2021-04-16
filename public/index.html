@@ -30,34 +30,37 @@
 
 <div id="game">
     <h2>Lancer une partie</h2>
-    <script type="text/javascript" src="./js/game.js"></script>
-    <script type="text/javascript" src="./js/game.display.js"></script>
-    <script type="text/javascript" src="./js/game.control.js"></script>
-    <script type="text/javascript" src="./js/game.keycode.js"></script>
-    <script type="text/javascript" src="./js/game.ai.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/js/game.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/js/game.display.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/js/game.control.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/js/game.keycode.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/js/game.ai.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/js/socketTriggers.js"></script>
     <script type="text/javascript">
+
         (function () {
             // début du code isolé
             var requestAnimId;
-
+            let socket;
+            let URL = "http://localhost:3000";
             var initialisation = function() {
                 // le code de l'initialisation
                 game.init();
-                if(!game.finished) {
-                    requestAnimId = window.requestAnimationFrame(main); // premier appel de main au rafraîchissement de la page
-                }
+                requestAnimId = window.requestAnimationFrame(main); // premier appel de main au rafraîchissement de la page
             }
 
             var main = function() {
-                game.clearLayer(game.playersBallLayer);
-                game.movePlayers();
-                game.displayPlayers();
-                game.moveBall();
-                game.ai.move();
-                game.collideBallWithPlayersAndAction();
+                if(!game.finished) {
+                    game.clearLayer(game.playersBallLayer);
+                    game.movePlayers();
+                    game.displayPlayers();
+                    game.moveBall();
+                    game.ai.move();
+                    game.collideBallWithPlayersAndAction();
+                }
                 requestAnimId = window.requestAnimationFrame(main); // rappel de main au prochain rafraîchissement de la page
             }
-
             window.onload = initialisation; // appel de la fonction initialisation au chargement de la page
 
             // fin du code isolé
