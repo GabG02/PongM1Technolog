@@ -12,7 +12,6 @@ io.on('connection', (socket) => {
 let folders = ["js","css","media/img","media/sounds"]
 folders.forEach(el =>{
     fs.readdirSync(__dirname + "/public/"+el+"/").forEach(file => {
-        console.log("FILE :" + "/"+ el +"/" + file);
 
         app.get("/"+ el +"/" + file, async (request, response) => {
             try {
