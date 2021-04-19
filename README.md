@@ -1,9 +1,9 @@
 # Le jeu du pong à 4 joueurs
 
-##Règles
+## Règles
 Le jeu du Pong consiste à faire voyager une balle d'une partie à l'autre d'un terrain en utilisant des raquettes représentées par des barre verticale. Lorsqu'une balle touche le côté droit, l'équipe gauche gagne le point et inversement.
 
-##Lancement
+## Lancement
 - Commencez par cloner le dépôt git sur votre ordinateur : ``git clone https://github.com/GabG02/PongM1Technolog.git``
 - Placez vous dans le dossier télécharger : ``cd ./PongM1Technolog/``
 - Pour lancer le jeu, lancez la commande : ``npm install && npm start ``
