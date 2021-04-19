@@ -10,8 +10,13 @@ Le jeu du Pong consiste à faire voyager une balle d'une partie à l'autre d'un 
 - Vous pouvez ensuite lancer sur votre ordinateur 4 navigateurs sous l'adresse ***localhost:3000*** (Le port peut être changé à la **ligne 45** du fichier **[server.js](./server.js)**)
 
 Pour aller plus vite : placez vous dans le dossier souhaitez et lancer 
+- UNIX : 
 ```
 git clone https://github.com/GabG02/PongM1Technolog.git && cd ./PongM1Technolog/ && npm install && npm start
+```
+- PowerShell :
+```
+git clone https://github.com/GabG02/PongM1Technolog.git ; cd ./PongM1Technolog/ ; npm install ; npm start
 ```
 ## Outils utilisés
 Les langages utilisés sont :
