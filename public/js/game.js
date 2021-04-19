@@ -114,7 +114,7 @@ var game = {
         this.initMouse(game.control.onMouseMove);
         this.playerSound= new Audio("./media/sounds/playerbounce.mp3");
         this.wallSound = new Audio("./media/sounds/wallbounce.mp3");
-        game.ai.setPlayerAndBall(this.playerTwo, this.ball);
+        //game.ai.setPlayerAndBall(this.playerTwo, this.ball);
     },
     moveBall : function() {
         this.ball.move();
@@ -122,6 +122,7 @@ var game = {
         this.displayBall();
     },
     displayScore : function() {
+        game.clearLayer(game.scoreLayer);
         game.display.drawTextInLayer(this.scoreLayer, this.leftScore, "60px Arial", "#FFFFFF", this.leftScorePos, 55);
         game.display.drawTextInLayer(this.scoreLayer, this.rightScore, "60px Arial", "#FFFFFF", this.rightScorePos, 55);
     },
@@ -161,16 +162,15 @@ var game = {
             else if (game.control.currentPlayer.goDown && game.control.currentPlayer.posY < game.control.mousePointer)
                 game.control.currentPlayer.posY+=5;
         }
+        socket.emit('MAJPosition', game.control.currentPlayer.posY)
     },
     collideBallWithPlayersAndAction : function() {
-        if(this.ball.posX<=0) {
-            this.ball.speed = 0;
-            this.playerTwo.score+=1;
-            this.end();
-        } else if(this.ball.posY>=game.groundWidth){
-            this.ball.speed = 0;
-            this.playerOne.score+=1;
-            this.end();
+        if(this.ball.posX <this.playerOne.posX) {
+            this.rightScore+=1;
+            game.end();
+        } else if(this.ball.posY >= this.groundWidth-this.playerFour.width){
+            this.leftScore+=1;
+            game.end();
         }
         if ( this.ball.collide(game.playerOne) ||  this.ball.collide(game.playerTwo) ||
             this.ball.collide(game.playerThree) ||  this.ball.collide(game.playerFour) ) {
@@ -184,8 +184,9 @@ var game = {
     },
     end: function(){
         console.log("Fin de la partie");
-        this.end=true;
         this.ball.speed=0
         this.displayScore();
+        socket.emit("FinDePartie",{ballPosX : game.ball.posX,ballPosY : game.ball.posY,leftScore : this.leftScore,rightScore : this.rightScore});
+        this.finished=true;
     }
 };

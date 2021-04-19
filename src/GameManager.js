@@ -11,25 +11,25 @@ class GameManager{
         if(this.player1 === undefined){
             this.player1 = playerSocket
             playerSocket.on("disconnect", ()=>{
-                console.log(this.player1?.id + " disconnected");
+                console.log(playerSocket.id + " disconnected");
                     this.player1=undefined;
             });
         } else if(this.player2 === undefined){
             this.player2 = playerSocket
             playerSocket.on("disconnect", ()=>{
-                console.log(this.player2?.id + " disconnected");
+                console.log(playerSocket.id + " disconnected");
                     this.player2=undefined;
             });
         } else if(this.player3 === undefined){
             this.player3 = playerSocket
             playerSocket.on("disconnect", ()=>{
-                    console.log(this.player3?.id + " disconnected");
+                    console.log(playerSocket.id + " disconnected");
                     this.player3=undefined;
             });
         } else if(this.player4 === undefined){
             this.player4 = playerSocket
             playerSocket.on("disconnect", ()=>{
-                console.log(this.player4?.id + " disconnected");
+                console.log(playerSocket.id + " disconnected");
                     this.player4=undefined;
             });
         }

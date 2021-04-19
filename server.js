@@ -43,15 +43,6 @@ app.get("/", async (request, response) => {
     }
 });
 
-app.post("/createGame", async (request, response) => {
-    try {
-        response.status(200).send(JSON.stringify(""));
-    } catch (Error) {
-        console.log("erreur lors de la lecture : " + Error.message);
-        response.status(500).send(JSON.stringify(Error));
-    }
-});
-
 let port = 3000;
 http.listen(port, function () {
     console.log('SERVEUR LANCÉ SUR LE PORT ' + port)
